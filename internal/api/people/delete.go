@@ -23,7 +23,7 @@ func (s *Implementation) Delete(w http.ResponseWriter, r *http.Request) {
 		resp.RespondWithError(w, http.StatusInternalServerError, err.Error())
 	}
 
-	log.Info().Msgf("deleted people with id %d", peopleID)
+	log.Info().Msgf("deleted person with id %d", peopleID)
 
 	res := make(map[string]int64)
 	res["deleted"] = peopleID

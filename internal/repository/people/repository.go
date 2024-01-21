@@ -21,7 +21,7 @@ func NewRepo(db *sqlc.Queries) repository.PeopleRepository {
 
 // Create creates a new people
 func (r *repo) Create(ctx context.Context, ppl *model.PeopleReq) (*model.People, error) {
-	user, err := r.DB.CreatePeople(ctx, sqlc.CreatePeopleParams{
+	person, err := r.DB.CreatePeople(ctx, sqlc.CreatePeopleParams{
 		Name:        ppl.Name,
 		Surname:     ppl.Surname,
 		Patronymic:  ppl.Patronymic,
@@ -34,14 +34,14 @@ func (r *repo) Create(ctx context.Context, ppl *model.PeopleReq) (*model.People,
 		return nil, err
 	}
 
-	//fmt.Printf("User created in repo: %v\n", user)
-	return converter.FromSqlcPersonToModelPeople(user), nil
+	//fmt.Printf("ppl created in repo: %v\n", person)
+	return converter.FromSqlcPersonToModelPeople(person), nil
 }
 
 // Get returns all ppls
 func (r *repo) Get(ctx context.Context, filter string, page int, limit int) ([]*model.People, error) {
 
-	users, err := r.DB.GetPeople(ctx, sqlc.GetPeopleParams{
+	persons, err := r.DB.GetPeople(ctx, sqlc.GetPeopleParams{
 		Column1: sql.NullString{String: filter, Valid: true},
 		Limit:   int32(limit),
 		Column3: int32(page),
@@ -53,12 +53,22 @@ func (r *repo) Get(ctx context.Context, filter string, page int, limit int) ([]*
 	}
 
 	//fmt.Printf("User created in repo: %v\n", user)
-	return converter.FromSqlcPersonSliceToModelPeopleSlice(users), nil
+	return converter.FromSqlcPersonSliceToModelPeopleSlice(persons), nil
 }
 
 // Update updates a ppl
-func (r *repo) Update(ctx context.Context, ppl *model.PeopleReq) (int64, error) {
-	return 0, nil
+func (r *repo) Update(ctx context.Context, id int, ppl *model.PeopleReq) (*model.People, error) {
+	person, err := r.DB.UpdatePeople(ctx, sqlc.UpdatePeopleParams{
+		ID:         int32(id),
+		Name:       ppl.Name,
+		Surname:    ppl.Surname,
+		Patronymic: ppl.Patronymic})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return converter.FromSqlcPersonToModelPeople(person), nil
 }
 
 // Delete deletes a ppl

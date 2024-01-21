@@ -8,12 +8,11 @@ import (
 
 // Create creates a new people
 func (s *serv) Create(ctx context.Context, ppl *model.PeopleReq) (*model.People, error) {
-	user, err := s.pplRepo.Create(ctx, ppl)
+	person, err := s.pplRepo.Create(ctx, ppl)
 
 	if err != nil {
 		return nil, err
 	}
 
-	//fmt.Println("User created in service")
-	return user, nil
+	return person, nil
 }

@@ -24,7 +24,7 @@ func (s *Implementation) Get(w http.ResponseWriter, r *http.Request) {
 
 	people, err := s.peopleService.Get(r.Context(), filter, page, limit)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		resp.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 

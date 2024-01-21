@@ -21,7 +21,7 @@ func (s *Implementation) Create(w http.ResponseWriter, r *http.Request) {
 		resp.RespondWithError(w, http.StatusInternalServerError, err.Error())
 	}
 
-	log.Info().Msgf("created people with id %d", people.ID)
+	log.Info().Msgf("created person with id %d", people.ID)
 
 	resp.RespondWithJSON(w, http.StatusCreated, converter.ToSqlcPersonFromModelPeople(people))
 }
