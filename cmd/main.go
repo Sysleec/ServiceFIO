@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	pplApi "github.com/Sysleec/ServiceFIO/internal/api/people"
 	pplRepository "github.com/Sysleec/ServiceFIO/internal/repository/people"
@@ -46,7 +47,7 @@ func main() {
 
 	pplRepo := pplRepository.NewRepo(db)
 	pplServ := pplService.NewService(pplRepo)
-	pApi := pplApi.NewImplementation(pplServ)
+	pAPI := pplApi.NewImplementation(pplServ)
 
 	app := chi.NewRouter()
 	app.Use(cors.Handler(cors.Options{
@@ -60,16 +61,17 @@ func main() {
 
 	v1 := chi.NewRouter()
 
-	v1.Post("/people", pApi.Create)
-	v1.Delete("/people/{id}", pApi.Delete)
-	v1.Get("/people", pApi.Get)
-	v1.Patch("/people/{id}", pApi.Update)
+	v1.Post("/people", pAPI.Create)
+	v1.Delete("/people/{id}", pAPI.Delete)
+	v1.Get("/people", pAPI.Get)
+	v1.Patch("/people/{id}", pAPI.Update)
 
 	app.Mount("/v1", v1)
 
 	serv := &http.Server{
-		Addr:    fmt.Sprintf("%v:%v", myURL, port),
-		Handler: app,
+		Addr:              fmt.Sprintf("%v:%v", myURL, port),
+		Handler:           app,
+		ReadHeaderTimeout: 10 * time.Second,
 	}
 
 	fmt.Printf("Server serving on port %v...\n", port)

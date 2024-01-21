@@ -5,7 +5,6 @@ import (
 
 	"github.com/Sysleec/ServiceFIO/internal/model"
 	"github.com/Sysleec/ServiceFIO/internal/service/enrich"
-	"github.com/rs/zerolog/log"
 )
 
 // Create creates a new people
@@ -14,7 +13,6 @@ func (s *serv) Create(ctx context.Context, ppl *model.PeopleReq) (*model.People,
 	if err != nil {
 		return nil, err
 	}
-	log.Info().Msgf("age %v, gender %v, nat %v", age, gender, nation)
 
 	enrichModel := model.People{
 		Name:        ppl.Name,

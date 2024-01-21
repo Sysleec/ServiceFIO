@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// People is a model for people
 type People struct {
 	ID          int32          `json:"id"`
 	Name        string         `json:"name"`
@@ -17,6 +18,7 @@ type People struct {
 	UpdatedAt   time.Time      `json:"updated_at"`
 }
 
+// PeopleReq is a request model for creating a new people
 type PeopleReq struct {
 	Name       string         `json:"name"`
 	Surname    string         `json:"surname"`
