@@ -1,11 +1,11 @@
 package people
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/Sysleec/ServiceFIO/internal/converter"
 	resp "github.com/Sysleec/ServiceFIO/internal/utils"
+	"github.com/rs/zerolog/log"
 )
 
 // Create creates a new user
@@ -21,7 +21,7 @@ func (s *Implementation) Create(w http.ResponseWriter, r *http.Request) {
 		resp.RespondWithError(w, http.StatusInternalServerError, err.Error())
 	}
 
-	log.Printf("created people with id %d\n", people.ID)
+	log.Info().Msgf("created people with id %d", people.ID)
 
-	resp.RespondWithJSON(w, http.StatusOK, converter.ToSqlcPersonFromModelPeople(people))
+	resp.RespondWithJSON(w, http.StatusCreated, converter.ToSqlcPersonFromModelPeople(people))
 }

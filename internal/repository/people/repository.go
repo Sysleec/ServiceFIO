@@ -49,5 +49,9 @@ func (r *repo) Update(ctx context.Context, ppl *model.PeopleReq) (int64, error) 
 
 // Delete deletes a ppl
 func (r *repo) Delete(ctx context.Context, id int64) (int64, error) {
-	return 0, nil
+	err := r.DB.DeletePeople(ctx, int32(id))
+	if err != nil {
+		return 0, err
+	}
+	return id, nil
 }

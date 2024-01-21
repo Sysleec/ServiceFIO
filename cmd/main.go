@@ -13,6 +13,7 @@ import (
 	pplService "github.com/Sysleec/ServiceFIO/internal/service/people"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
+	"github.com/rs/zerolog"
 
 	_ "github.com/lib/pq"
 
@@ -27,11 +28,19 @@ func main() {
 	port := os.Getenv("HTTP_PORT")
 	myURL := os.Getenv("HTTP_HOST")
 	myDSN := os.Getenv("PG_DSN")
+	logLevel := os.Getenv("LOG_LEVEL")
 
 	conn, err := sql.Open("postgres", myDSN)
 	if err != nil {
 		log.Fatalf("Can't connect to DB: %v", err)
 	}
+
+	logLVL, err := zerolog.ParseLevel(logLevel)
+	if err != nil {
+		log.Fatalf("Can't parse log level: %v", err)
+	}
+
+	zerolog.SetGlobalLevel(logLVL)
 
 	db := sqlc.New(conn)
 
@@ -52,6 +61,8 @@ func main() {
 	v1 := chi.NewRouter()
 
 	v1.Post("/people", pApi.Create)
+	v1.Delete("/people/{id}", pApi.Delete)
+	//v1.Get("/people/{filter}", pApi.Get)
 
 	app.Mount("/v1", v1)
 
@@ -60,7 +71,7 @@ func main() {
 		Handler: app,
 	}
 
-	fmt.Printf("Server serving on port %v...", port)
+	fmt.Printf("Server serving on port %v...\n", port)
 
 	log.Fatal(serv.ListenAndServe())
 

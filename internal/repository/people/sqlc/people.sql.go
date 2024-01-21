@@ -48,3 +48,87 @@ func (q *Queries) CreatePeople(ctx context.Context, arg CreatePeopleParams) (Per
 	)
 	return i, err
 }
+
+const deletePeople = `-- name: DeletePeople :exec
+DELETE FROM people WHERE id = $1
+`
+
+func (q *Queries) DeletePeople(ctx context.Context, id int32) error {
+	_, err := q.db.ExecContext(ctx, deletePeople, id)
+	return err
+}
+
+const getPeople = `-- name: GetPeople :many
+SELECT id, name, surname, patronymic, age, gender, nationality, created_at, updated_at FROM people
+`
+
+func (q *Queries) GetPeople(ctx context.Context) ([]Person, error) {
+	rows, err := q.db.QueryContext(ctx, getPeople)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Person
+	for rows.Next() {
+		var i Person
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Surname,
+			&i.Patronymic,
+			&i.Age,
+			&i.Gender,
+			&i.Nationality,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const updatePeople = `-- name: UpdatePeople :one
+UPDATE people
+SET name = COALESCE($2, name),
+    surname = COALESCE($3, surname),
+    patronymic = COALESCE($4, patronymic)
+WHERE id = $1
+RETURNING id, name, surname, patronymic, age, gender, nationality, created_at, updated_at
+`
+
+type UpdatePeopleParams struct {
+	ID         int32
+	Name       string
+	Surname    string
+	Patronymic sql.NullString
+}
+
+func (q *Queries) UpdatePeople(ctx context.Context, arg UpdatePeopleParams) (Person, error) {
+	row := q.db.QueryRowContext(ctx, updatePeople,
+		arg.ID,
+		arg.Name,
+		arg.Surname,
+		arg.Patronymic,
+	)
+	var i Person
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Surname,
+		&i.Patronymic,
+		&i.Age,
+		&i.Gender,
+		&i.Nationality,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
