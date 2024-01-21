@@ -27,40 +27,43 @@
 </p>
 <hr>
 
----
+## 📍 Overview
 
-##  Overview
+# HTTP Handlers for People Management
 
-HTTP Handlers:
+## Create People
+- **Method:** POST
+- **URL:** `http://45.8.97.234:8080/v1/people`
+- **Body:**
+  ```json
+  {
+      "Name": "Nike",
+      "Surname": "Balatov",
+      "Patronymic": "Jerokovich" // optional
+  }
+  ```
 
-Create People
-POST: http://45.8.97.234:8080/v1/people
-BODY: 
-{
-    "Name": "Nike",
-    "Surname": "Balatov",
-    "Patronymic": "Jerokovich" //optional
-}
+## Get People
+- **Method:** GET
+- **URL:** `http://45.8.97.234:8080/v1/people`
+- **Optional Filters:** page, limit, filter
+- **Example:** `http://45.8.97.234:8080/v1/people?page=1&limit=10&filter=Maks`
 
-Get People
-GET: http://45.8.97.234:8080/v1/people 
-Optional filters
-page | limit | filter
-EXAMPLE: http://45.8.97.234:8080/v1/people?page=1&limit=10&filter=Maks
+## Delete People
+- **Method:** DELETE
+- **URL:** `http://45.8.97.234:8080/v1/people/{id}`
 
-
-Delete People
-DELETE: http://45.8.97.234:8080/v1/people/{id}
-
-
-Update People
-PATCH: http://45.8.97.234:8080/v1/people/{id}
-BODY: 
-{
-    "Name": "Nike", //optional
-    "Surname": "Balatov", //optional
-    "Patronymic": "Jerokovich" //optional
-}
+## Update People
+- **Method:** PATCH
+- **URL:** `http://45.8.97.234:8080/v1/people/{id}`
+- **Body:**
+  ```json
+  {
+      "Name": "Nike", // optional
+      "Surname": "Balatov", // optional
+      "Patronymic": "Jerokovich" // optional
+  }
+  ```
 
 ---
 
