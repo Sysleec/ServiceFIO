@@ -13,3 +13,9 @@ type PeopleService interface {
 	Update(ctx context.Context, id int, ppl *model.PeopleReq) (*model.People, error)
 	Delete(ctx context.Context, id int64) (int64, error)
 }
+
+type EnrichmentService interface {
+	GetAge(ctx context.Context, name string) (int, error)
+	GetGender(ctx context.Context, name string) (string, error)
+	GetNationality(ctx context.Context, name string) (string, error)
+}

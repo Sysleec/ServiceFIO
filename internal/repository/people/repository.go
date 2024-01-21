@@ -20,14 +20,14 @@ func NewRepo(db *sqlc.Queries) repository.PeopleRepository {
 }
 
 // Create creates a new people
-func (r *repo) Create(ctx context.Context, ppl *model.PeopleReq) (*model.People, error) {
+func (r *repo) Create(ctx context.Context, ppl *model.People) (*model.People, error) {
 	person, err := r.DB.CreatePeople(ctx, sqlc.CreatePeopleParams{
 		Name:        ppl.Name,
 		Surname:     ppl.Surname,
 		Patronymic:  ppl.Patronymic,
-		Age:         20,
-		Gender:      "Male",
-		Nationality: "Russian",
+		Age:         ppl.Age,
+		Gender:      ppl.Gender,
+		Nationality: ppl.Nationality,
 	})
 
 	if err != nil {
