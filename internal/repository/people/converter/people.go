@@ -18,3 +18,15 @@ func FromSqlcPersonToModelPeople(person modelRepo.Person) *model.People {
 		UpdatedAt:   person.UpdatedAt,
 	}
 }
+
+// func ToNullString(s string) sql.NullString {
+// 	return sql.NullString{String: s, Valid: s != ""}
+// }
+
+func FromSqlcPersonSliceToModelPeopleSlice(persons []modelRepo.Person) []*model.People {
+	var people []*model.People
+	for _, person := range persons {
+		people = append(people, FromSqlcPersonToModelPeople(person))
+	}
+	return people
+}

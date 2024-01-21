@@ -62,7 +62,7 @@ func main() {
 
 	v1.Post("/people", pApi.Create)
 	v1.Delete("/people/{id}", pApi.Delete)
-	//v1.Get("/people/{filter}", pApi.Get)
+	v1.Get("/people", pApi.Get)
 
 	app.Mount("/v1", v1)
 

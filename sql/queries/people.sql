@@ -9,7 +9,10 @@ DELETE FROM people WHERE id = $1;
 
 
 -- name: GetPeople :many
-SELECT * FROM people;
+SELECT * FROM people
+WHERE ($1 = '' OR name LIKE '%' || $1 || '%')
+ORDER BY id
+LIMIT $2 OFFSET ($3 - 1) * $2;
 
 -- name: UpdatePeople :one
 UPDATE people

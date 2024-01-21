@@ -60,10 +60,19 @@ func (q *Queries) DeletePeople(ctx context.Context, id int32) error {
 
 const getPeople = `-- name: GetPeople :many
 SELECT id, name, surname, patronymic, age, gender, nationality, created_at, updated_at FROM people
+WHERE ($1 = '' OR name LIKE '%' || $1 || '%')
+ORDER BY id
+LIMIT $2 OFFSET ($3 - 1) * $2
 `
 
-func (q *Queries) GetPeople(ctx context.Context) ([]Person, error) {
-	rows, err := q.db.QueryContext(ctx, getPeople)
+type GetPeopleParams struct {
+	Column1 interface{}
+	Limit   int32
+	Column3 interface{}
+}
+
+func (q *Queries) GetPeople(ctx context.Context, arg GetPeopleParams) ([]Person, error) {
+	rows, err := q.db.QueryContext(ctx, getPeople, arg.Column1, arg.Limit, arg.Column3)
 	if err != nil {
 		return nil, err
 	}

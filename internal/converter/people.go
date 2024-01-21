@@ -50,3 +50,11 @@ func ToSqlcPersonFromModelPeople(m *model.People) *sqlc.Person {
 		UpdatedAt:   m.UpdatedAt,
 	}
 }
+
+func ToSqlcPersonSliceFromModelPeopleSlice(m []*model.People) []*sqlc.Person {
+	var people []*sqlc.Person
+	for _, person := range m {
+		people = append(people, ToSqlcPersonFromModelPeople(person))
+	}
+	return people
+}

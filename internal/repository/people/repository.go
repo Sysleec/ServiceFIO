@@ -2,6 +2,7 @@ package people
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/Sysleec/ServiceFIO/internal/model"
 	"github.com/Sysleec/ServiceFIO/internal/repository"
@@ -38,8 +39,21 @@ func (r *repo) Create(ctx context.Context, ppl *model.PeopleReq) (*model.People,
 }
 
 // Get returns all ppls
-func (r *repo) Get(ctx context.Context) ([]*model.People, error) {
-	return nil, nil
+func (r *repo) Get(ctx context.Context, filter string, page int, limit int) ([]*model.People, error) {
+
+	users, err := r.DB.GetPeople(ctx, sqlc.GetPeopleParams{
+		Column1: sql.NullString{String: filter, Valid: true},
+		Limit:   int32(limit),
+		Column3: int32(page),
+	},
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	//fmt.Printf("User created in repo: %v\n", user)
+	return converter.FromSqlcPersonSliceToModelPeopleSlice(users), nil
 }
 
 // Update updates a ppl
